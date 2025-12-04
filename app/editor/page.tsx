@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import ImageEditor from '@/components/image-editor/ImageEditor';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Lock } from 'lucide-react';
@@ -14,7 +14,7 @@ interface Scene {
   image_url: string;
 }
 
-export default function EditorPage() {
+function EditorContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
@@ -194,5 +194,17 @@ export default function EditorPage() {
         onSave={handleSave}
       />
     </div>
+  );
+}
+
+export default function EditorPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <Loader2 className="animate-spin text-emerald-600" size={40} />
+      </div>
+    }>
+      <EditorContent />
+    </Suspense>
   );
 }
