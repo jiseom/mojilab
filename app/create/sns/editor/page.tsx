@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Sparkles, Eye, Download, ChevronLeft, ChevronRight, Image as ImageIcon, FolderOpen } from 'lucide-react';
+import { Upload, Sparkles, Eye, Download, ChevronLeft, ChevronRight, Image as ImageIcon, FolderOpen, Lock, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -28,7 +29,8 @@ interface EmoticonScene {
 }
 
 export default function InstatoonEditorPage() {
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [characters, setCharacters] = useState<File[]>([]);
   const [characterPreviews, setCharacterPreviews] = useState<string[]>([]);
@@ -164,6 +166,33 @@ export default function InstatoonEditorPage() {
     seriesPage * SERIES_PER_PAGE,
     (seriesPage + 1) * SERIES_PER_PAGE
   );
+
+  // 로딩 중
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <Loader2 className="animate-spin text-emerald-600" size={40} />
+      </div>
+    );
+  }
+
+  // 로그인 필요
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <div className="text-center">
+          <Lock className="mx-auto text-gray-400 mb-4" size={48} />
+          <p className="text-gray-600 mb-4">로그인이 필요합니다.</p>
+          <button
+            onClick={() => router.push('/login')}
+            className="px-4 py-2 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white rounded-lg hover:from-emerald-500 hover:to-emerald-600 transition-all"
+          >
+            로그인
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
