@@ -1,176 +1,149 @@
-# Mojilab
+# Mojilab - AI 이모티콘 생성 서비스
 
-AI 기반 이모티콘 생성 서비스입니다.
+AI 기반 커스텀 이모티콘 및 스티커 생성 플랫폼
 
-## 기술 스택
+---
 
-### Frontend
-- **Framework**: Next.js 15.1.4 (App Router)
-- **Language**: TypeScript
-- **UI Library**: React 18.3.1
-- **Styling**: Tailwind CSS 3.4
-- **Animation**: Framer Motion
-- **Icons**: Lucide React
-- **State Management**: Zustand
+## 1. 🎯 프로젝트 개요
 
-### Backend & Database
-- **Database**: Supabase (PostgreSQL)
-- **Storage**: Supabase Storage
-- **Authentication**: Supabase Auth
+### 1.1. 프로젝트 주제
+- **AI 기반 캐릭터 이모티콘 자동 생성 서비스**
+- Google Gemini API를 활용한 참조 이미지 기반 이모티콘 세트 생성
 
-### AI Integration
-- **Image Generation**: Google Gemini 2.5 Flash, Replicate (Flux LoRA)
-- **Text Generation**: OpenAI GPT, Google Gemini
+### 1.2. 제작 배경 (해결하고자 하는 문제)
+- 개인 크리에이터나 소규모 사업자가 고유한 캐릭터 이모티콘을 제작하는 데 전문 디자인 기술과 많은 시간이 필요함
+- 기존 AI 이미지 생성 도구는 일관된 캐릭터 스타일 유지가 어렵고, 이모티콘 특화 기능이 부족함
 
-### Image Processing
-- **Canvas Editor**: Fabric.js
-- **GIF Creation**: gifenc, gif-encoder-2
-- **Image Optimization**: Sharp
+### 1.3. 핵심 목표 (제공하는 가치)
+1. **스타일 일관성 유지**: 참조 이미지를 기반으로 동일한 캐릭터 스타일의 다양한 감정 표현 생성
+2. **사용자 테마 기반 이모티콘 생성**: 사용자가 입력한 테마/키워드에 맞는 커스텀 이모티콘 세트 생성
+3. **GIF 애니메이션 지원**: 움직이는 이모티콘(반짝임, 흔들림, 통통 튀기) 생성 기능
+4. **배경 자동 제거**: Replicate rembg를 활용한 투명 배경 처리
 
-## 주요 기능
+---
 
-### 이모티콘 생성
-- **심플 이모티콘**: AI 챗봇과 대화하며 32개 이모티콘 세트 생성
-- **Pro 이모티콘**: LoRA 학습으로 나만의 스타일 이모티콘 생성
-- **SNS 콘텐츠**: SNS용 이미지 생성 및 편집
+## 2. 🛠️ 기술 스택 (Tech Stack)
 
-### 이미지 편집
-- Fabric.js 기반 캔버스 에디터
-- 레이어 관리
-- 텍스트/스티커 추가
-- GIF 애니메이션 생성
+| 구분 | 기술 |
+| :--- | :--- |
+| **Frontend** | Next.js 14, React 18, TypeScript, Tailwind CSS |
+| **Backend** | Next.js API Routes, Supabase |
+| **Database** | Supabase (PostgreSQL) |
+| **Storage** | Supabase Storage |
+| **AI / ML** | Google Gemini 2.5 Flash Image API, Replicate (rembg) |
+| **Image Processing** | Sharp, gifenc |
+| **Authentication** | Supabase Auth |
+| **Infra / Tools** | Git, Vercel |
 
-### 공유 기능
-- 카카오톡 공유하기
+---
 
-## 프로젝트 구조
+## 3. 🚀 시작하기 (Getting Started)
+
+### 3.1. 개발 환경
+- **Node.js 버전**: 18.x 이상
+- **패키지 매니저**: npm
+- **주요 의존성**: `package.json` 참조
+
+### 3.2. 설치 및 실행
+1.  **레포지토리 복제**
+    ```bash
+    git clone https://github.com/KernelAcademy-AICamp/ai-camp-1st-llm-agent-service-project-mojilab.git
+    cd ai-camp-1st-llm-agent-service-project-mojilab
+    ```
+
+2.  **의존성 설치**
+    ```bash
+    npm install
+    ```
+
+3.  **환경 변수 설정**
+    `.env.example` 파일을 복사하여 `.env.local` 파일을 생성하고, 필요한 API Key를 입력합니다.
+    ```bash
+    cp .env.example .env.local
+    ```
+
+    필요한 환경 변수:
+    - `NEXT_PUBLIC_SUPABASE_URL`: Supabase 프로젝트 URL
+    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase 익명 키
+    - `SUPABASE_SERVICE_ROLE_KEY`: Supabase 서비스 역할 키
+    - `GEMINI_API_KEY`: Google Gemini API 키
+    - `REPLICATE_API_TOKEN`: Replicate API 토큰
+
+4.  **개발 서버 실행**
+    ```bash
+    npm run dev
+    ```
+
+    브라우저에서 `http://localhost:3000` 접속
+
+5.  **프로덕션 빌드**
+    ```bash
+    npm run build
+    npm start
+    ```
+
+---
+
+## 4. 🌳 레포지토리 구조
 
 ```
-mojilab/
-├── app/                          # Next.js App Router
-│   ├── page.tsx                  # 홈 (랜딩 페이지)
-│   ├── landing/                  # 랜딩 페이지
-│   ├── create/                   # 이모티콘 생성
-│   │   ├── emoticon/             # 생성 방식 선택
-│   │   ├── simple/               # 심플 이모티콘
-│   │   ├── pro/                  # Pro 이모티콘
-│   │   │   └── train/            # LoRA 학습
-│   │   └── sns/                  # SNS 콘텐츠
-│   │       └── editor/           # SNS 에디터
-│   ├── editor/                   # 이미지 에디터
-│   ├── series/                   # 이모티콘 시리즈
-│   │   └── [id]/                 # 시리즈 상세
-│   ├── my-series/                # 내 시리즈
-│   ├── chat/                     # AI 챗봇
-│   ├── login/                    # 로그인
-│   ├── signup/                   # 회원가입
-│   └── api/                      # API Routes
-│       ├── emoticons/            # 이모티콘 API
-│       │   ├── generate-simple/  # 심플 생성
-│       │   ├── generate-scenes/  # 장면 생성
-│       │   ├── create-gif/       # GIF 생성
-│       │   ├── save/             # 저장
-│       │   └── popular/          # 인기 목록
-│       ├── lora/                 # LoRA 학습 API
-│       │   ├── train/            # 학습 시작
-│       │   ├── models/           # 모델 목록
-│       │   ├── check-status/     # 상태 확인
-│       │   └── webhook/          # Replicate 웹훅
-│       └── instatoon/            # 인스타툰 API
-├── components/                   # React 컴포넌트
-│   ├── AppLayout.tsx             # 앱 레이아웃
-│   ├── CommonNavbar.tsx          # 공통 네비게이션
-│   ├── KakaoScript.tsx           # 카카오 SDK
-│   ├── image-editor/             # 이미지 에디터 컴포넌트
-│   └── chat/                     # 챗봇 컴포넌트
-├── contexts/                     # React Context
-│   ├── AuthContext.tsx           # 인증 상태
-│   ├── GenerationContext.tsx     # 생성 상태
-│   └── ThemeContext.tsx          # 테마 상태
-├── lib/                          # 유틸리티
-│   ├── supabase.ts               # Supabase 클라이언트 (브라우저)
-│   ├── supabase-server.ts        # Supabase 클라이언트 (서버)
-│   ├── supabase-storage.ts       # Supabase Storage 유틸
-│   └── credits.ts                # 크레딧 관리
-├── types/                        # TypeScript 타입 정의
-├── public/                       # 정적 파일
-│   └── banners/                  # 배너 이미지
-└── supabase/                     # Supabase 설정
-    └── migrations/               # DB 마이그레이션
+/
+├── app/                    # Next.js App Router
+│   ├── api/               # API Routes
+│   │   └── emoticons/     # 이모티콘 생성 API
+│   │       ├── create-gif/           # GIF 애니메이션 생성
+│   │       ├── generate/             # 테마 기반 이모티콘 생성
+│   │       ├── generate-simple/      # 간단 이모티콘 생성
+│   │       └── save/                 # 이모티콘 저장
+│   ├── editor/            # 이모티콘 에디터 페이지
+│   ├── series/            # 시리즈 관리 페이지
+│   └── page.tsx           # 메인 페이지
+│
+├── components/            # React 컴포넌트
+├── contexts/              # React Context (Auth, Generation)
+├── lib/                   # 유틸리티 함수
+│
+├── .env.example           # 환경 변수 템플릿
+├── package.json           # Node.js 의존성
+└── README.md              # 프로젝트 소개 문서
 ```
 
-## 시작하기
+---
 
-### 사전 요구사항
-- Node.js 18+
-- npm 또는 yarn
+## 5. 🔐 보안 가이드라인
 
-### 설치
+1. **환경 변수**: API Key, DB 접속 정보 등 민감 정보는 `.env.local` 파일에 저장하며, 절대로 Git에 커밋하지 않습니다.
+2. **인증**: API 엔드포인트는 Supabase Auth 토큰 검증을 통해 보호됩니다.
 
-```bash
-# 의존성 설치
-npm install
-```
+---
 
-### 환경 변수 설정
+## 6. 주요 기능
 
-`.env.example`을 `.env.local`로 복사하고 값을 설정하세요:
+### 6.1. 이모티콘 생성
+- **테마 기반 생성**: 사용자가 입력한 테마(예: "카페", "운동", "공부")에 맞는 이모티콘 세트 생성
+- **참조 이미지 기반**: 업로드한 캐릭터 이미지 스타일 유지
+- **배경 자동 제거**: 투명 배경 PNG 출력
 
-```bash
-cp .env.example .env.local
-```
+### 6.2. GIF 애니메이션
+- **반짝임 (Sparkle)**: 크기 변화와 밝기 효과
+- **흔들림 (Shake)**: 좌우 틸트 애니메이션
+- **통통 튀기 (Bounce)**: 위아래 점프 효과
+- **커스텀 액션**: 사용자 정의 애니메이션
 
-#### 필수 환경 변수
+### 6.3. 시리즈 관리
+- 생성된 이모티콘 시리즈 저장 및 관리
+- 이모티콘 개별 편집 기능
+- 다운로드 및 공유 기능
 
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+---
 
-# Google Gemini (이미지 생성)
-GEMINI_API_KEY=your_gemini_api_key
+## 7. 🏁 최종 결과물
 
-# Replicate (LoRA 학습)
-REPLICATE_API_TOKEN=your_replicate_api_token
-
-# Kakao (공유하기)
-NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY=your_kakao_javascript_key
-```
-
-### 개발 서버 실행
-
-```bash
-npm run dev
-```
-
-브라우저에서 [http://localhost:3000](http://localhost:3000) 접속
-
-### 빌드
-
-```bash
-npm run build
-npm start
-```
-
-## 배포
-
-### Vercel 배포 (권장)
-
-1. [Vercel](https://vercel.com)에서 GitHub 저장소 연결
-2. 환경 변수 설정
-3. 자동 배포
-
-```bash
-# 또는 Vercel CLI 사용
-npm install -g vercel
-vercel
-```
-
-### 환경 변수 설정 (Vercel)
-
-Vercel 대시보드 → Settings → Environment Variables에서 위의 필수 환경 변수들을 설정하세요.
-
-## 라이센스
-
-MIT
+1. **웹 서비스**: AI 기반 이모티콘 생성 플랫폼
+2. **핵심 기능**:
+   - Gemini API 기반 이미지 생성
+   - 사용자 테마 기반 커스텀 이모티콘 생성
+   - GIF 애니메이션 생성
+   - 배경 자동 제거
+3. **인증 시스템**: Supabase Auth 기반 사용자 인증
+4. **데이터 저장**: Supabase Storage 기반 이미지 저장
