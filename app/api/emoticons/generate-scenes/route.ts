@@ -8,7 +8,7 @@ interface GenerateScenesRequest {
   theme: string;
 }
 
-const SCENE_COUNT = 32;
+const SCENE_COUNT = 5; // Vercel 타임아웃 대응 (원래 32)
 
 // 테마를 장면으로 분해하는 함수
 async function breakThemeIntoScenes(theme: string, character: string): Promise<string[]> {
