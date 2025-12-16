@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
         categories,
         metadata
       `)
+      .eq('is_public',true)
       .order('created_at', { ascending: false })
       .limit(limit);
 
