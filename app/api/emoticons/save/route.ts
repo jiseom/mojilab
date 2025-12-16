@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       console.log(`✅ API: Public URL: ${publicUrl}`);
 
       // 새로운 Scene인지 기존 Scene인지 확인
-      const isNewScene = sceneId.startsWith('new_scene_');
+      const isNewScene = `new_scene_${Date.now()}`;
 
       if (isNewScene) {
         // 새로운 Scene INSERT
