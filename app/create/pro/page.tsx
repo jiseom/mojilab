@@ -120,7 +120,11 @@ export default function ProEmoticonPage() {
       const scenesResponse = await fetch('/api/emoticons/generate-scenes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ character, theme }),
+        body: JSON.stringify({ 
+          character,
+          theme,
+          id:selectedModel?.id,
+        }),
       });
       const scenesData = await scenesResponse.json();
 
@@ -136,6 +140,7 @@ export default function ProEmoticonPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: selectedModel.id,
           mode: 'text2img',
           style: 'pen', // 펜 스타일 (선명한 라인)
           prompts,
@@ -157,7 +162,6 @@ export default function ProEmoticonPage() {
         // 서버에서 저장이 완료되면 seriesId가 반환됨
         if (data.savedSeriesId) {
           setSavedSeriesId(data.savedSeriesId);
-          console.log('Auto-saved to Supabase:', data.savedSeriesId);
         }
 
         // 자동 다운로드

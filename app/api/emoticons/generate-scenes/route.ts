@@ -6,6 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 interface GenerateScenesRequest {
   character: string;
   theme: string;
+  id: string;
 }
 
 const SCENE_COUNT = 5; // Vercel 타임아웃 대응 (원래 32)
@@ -60,11 +61,11 @@ Now generate ${SCENE_COUNT} DETAILED POSE DESCRIPTIONS for the given theme in Ko
 export async function POST(request: NextRequest) {
   try {
     const body: GenerateScenesRequest = await request.json();
-    const { character, theme } = body;
+    const { character, theme, id} = body;
 
-    if (!character || !theme) {
+    if (!character || !theme || !id) {
       return NextResponse.json(
-        { error: 'Missing required fields: character, theme' },
+        { error: 'Missing required fields: character, theme, id' },
         { status: 400 }
       );
     }

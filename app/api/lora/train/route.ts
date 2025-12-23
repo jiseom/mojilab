@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
       const { training, destination } = await trainLoRA({
         trainingDataUrl,
         triggerWord,
-        webhookUrl,
+        // webhookUrl,
         modelName,
         description: `${name} - Custom LoRA style`,
       });
@@ -166,7 +166,7 @@ export async function POST(request: NextRequest) {
         .from('lora_models')
         .update({
           replicate_training_id: training.id,
-          replicate_model_name: destination,
+          replicate_model_name: destination,//TODO: 변경필요
           status: 'training',
           training_started_at: new Date().toISOString(),
         })

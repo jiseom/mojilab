@@ -3,6 +3,7 @@ import Replicate from 'replicate';
 import sharp from 'sharp';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN || '',
@@ -22,7 +23,25 @@ function getSupabaseClient() {
   return createClient(supabaseUrl, supabaseServiceKey);
 }
 
+async function resolveReplicateModelById(id: string): Promise<string> {
+  const supabase = getSupabaseClient();
+
+  const { data, error } = await supabase
+    .from('lora_models')
+    .select('replicate_model_name')
+    .eq('id', id)
+    .single();
+
+  if (error || !data?.replicate_model_name) {
+    throw new Error(`Invalid model id: ${id}`);
+  }
+  return data.replicate_model_name as string;
+}
+
+
+
 interface ConvertRequest {
+  id?: string;
   images?: string[]; // base64 data URLs (optional - img2img mode)
   prompts?: string[]; // text prompts (optional - text2img mode)
   mode?: 'text2img' | 'img2img' | 'preview' | 'batch'; // generation mode
@@ -151,6 +170,7 @@ export async function POST(request: NextRequest) {
   try {
     const body: ConvertRequest = await request.json();
     const {
+      id,
       images, prompts, mode = 'text2img', style, theme, referenceImage, monochromeOnly = true,
       saveToDb = false, userId, character, emotionNames
     } = body;
@@ -187,9 +207,18 @@ export async function POST(request: NextRequest) {
 
     console.log(`Generating ${itemCount} images with FLUX LoRA (${mode} mode${style ? `, style: ${style}` : ''}${theme ? `, theme: ${theme}` : ''})...`);
 
-    // 당신의 FLUX LoRA 모델
-    const model = 'jiseom/flux-doodlemoji:f61b8ec227e4a21a54d953f554d96dc9586cfdbdcf5fadf6959f9981185c5a6c';
+    let modelName: string | null = null;
 
+    if (!id) {
+      return NextResponse.json(
+      { error: 'model id is required' },
+      { status: 400 }
+     );
+    }
+
+    // id가 있으면 반드시 resolve
+    const model = await resolveReplicateModelById(id);
+    	
     const results = [];
 
     // 이미지/프롬프트를 순차적으로 생성 (rate limit 회피)

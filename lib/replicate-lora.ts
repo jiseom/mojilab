@@ -52,7 +52,7 @@ export function validateTrainingImages(files: File[]): string[] {
 export async function trainLoRA(params: {
   trainingDataUrl: string; // ZIP 파일 URL
   triggerWord: string;
-  webhookUrl: string;
+  // webhookUrl: string;
   modelName: string; // 모델 이름 (예: "style-abc12345")
   description?: string;
 }) {
@@ -117,8 +117,8 @@ export async function trainLoRA(params: {
           optimizer: LORA_TRAINING_CONFIG.optimizer,
           autocaption: LORA_TRAINING_CONFIG.autocaption,
         },
-        webhook: params.webhookUrl,
-        webhook_events_filter: ['start', 'completed'],
+        // webhook: params.webhookUrl,
+        // webhook_events_filter: ['start', 'completed'],
       }),
     }
   );
