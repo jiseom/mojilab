@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabaseAdmin
       .from('lora_models')
-      .select('*')
+      .select('id,name,training_images_count,status')
       .eq('user_id', targetUserId)
       .order('created_at', { ascending: false });
 
